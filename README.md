@@ -1,6 +1,6 @@
 # lohitmalra-uconn.github.io
 
-This is a sample project by lohitmarla who is a student in uconn.
+This is a sample project by lohitmarla who is a student of uconn.
 
 1. # for a big header
 2. ## for a little smaller header
@@ -10,4 +10,4 @@ This is a sample project by lohitmarla who is a student in uconn.
   
 6. To make a link - [ click here for my github page ] ([https://lohitmarla-uconn/lohitmalra-uconn.github.io](https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)
    
-7. ![Picture of elephant]](https://images.app.goo.gl/UwGF4FaoZjCjHy3h9)
+7. ![Picture of elephant](https://images.app.goo.gl/UwGF4FaoZjCjHy3h9)
