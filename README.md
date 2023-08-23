@@ -9,4 +9,4 @@ This is a sample project by lohitmarla who is a student in uconn.
 5. * makes italic *
   
 6. To make a link - [ click here for my github page ] ([https://lohitmarla-uconn/lohitmalra-uconn.github.io](https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)
-7. 
+   
