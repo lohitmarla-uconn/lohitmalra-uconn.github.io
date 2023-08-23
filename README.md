@@ -10,4 +10,4 @@ This is a sample project by lohitmarla who is a student of uconn.
   
 6. To make a link - [ click here for my github page ] ([https://lohitmarla-uconn/lohitmalra-uconn.github.io](https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)
    
-7. ![Picture of elephant](https://images.app.goo.gl/iGaZLj1b2dmmZGVH9)
+7. ![Picture of elephant](https://cdn.britannica.com/84/232784-050-1769B477/Siberian-Husky-dog.jpg)
