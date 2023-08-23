@@ -1,6 +1,6 @@
 # [lohitmalra-uconn.github.io](https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)
 
-This is a sample project by **lohitmarla** who is a masters student in #ffffff data science of *University of Connecticut* storrs campus.
+This is a sample project by **lohitmarla** who is a masters student in data science of *University of Connecticut* storrs campus.
 
 
 
