@@ -2,6 +2,8 @@
 
 Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's student at the University of Connecticut - Storrs campus.
 
+![Uconn](https://i0.wp.com/ctmirror-images.s3.amazonaws.com/wp-content/uploads/2020/06/Uconn-sign-1-e1593099230687.jpg?resize=1999%2C1338&ssl=1)
+
 I am an experienced, result-oriented, and resourceful data engineer with a passion for problem-solving. I excel in adapting to and meeting challenges, even with tight release schedules. My experience includes contributing to dynamic team environments that prioritize business growth by providing exceptional value and service.
 
 ## Education
@@ -61,4 +63,4 @@ Key Contributions:
 
 For more updates and information, follow me on [LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/).
 
-![Siberian Husky](https://cdn.britannica.com/84/232784-050-1769B477/Siberian-Husky-dog.jpg)
+![Uconn](https://i0.wp.com/ctmirror-images.s3.amazonaws.com/wp-content/uploads/2020/06/Uconn-sign-1-e1593099230687.jpg?resize=1999%2C1338&ssl=1)
