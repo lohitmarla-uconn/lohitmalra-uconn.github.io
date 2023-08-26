@@ -1,4 +1,4 @@
-# [Lohit Marla's GitHub Portfolio](https://github.com/lohitmarla-uconn/lohitmarla-uconn.github.io)
+# [Lohit Marla's GitHub Portfolio](https://github.com/lohitmarla-uconn/lohitmalra-uconn.github.io)
 
 Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's student at the University of Connecticut - Storrs campus.
 
