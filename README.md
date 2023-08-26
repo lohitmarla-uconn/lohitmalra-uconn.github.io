@@ -4,7 +4,7 @@ Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's studen
 
 <div style="display: flex; align-items: center;">
   <img src="IMG_20230712_120951.jpg" alt="Image 1" width="200" height=auto style="margin-right: 20px;">
-  <p>I am an experienced, result-oriented, and resourceful data engineer with a passion for problem-solving. I excel in adapting to and meeting challenges, even with tight release schedules. My experience includes contributing to dynamic team environments that prioritize business growth by providing exceptional value and service. I
+  <p>I am an experienced, result-oriented, and resourceful data engineer with a passion for problem-solving. I excel in adapting to and meeting challenges, even with tight release schedules. My experience includes contributing to dynamic team environments that prioritize business growth by providing exceptional value and service.
 </p>
 </div>
 
@@ -60,9 +60,9 @@ Key Contributions:
   [View the appreciation letter](https://drive.google.com/file/d/1j_vKxuxp-iJYlkDnsdLnVcl52eJjKNLv/view?usp=sharing)
 
 ## Achievements
-- Bronze Medal: Week Code 8, World Code Sprint 13 (HackerRank)
-- Certificate of Merit: Python Coding Competition, C Coding Competition, CodeWar (University Level)
-- Star Performer: Book Eventz (Campus Ambassador)
+- Bronze Medal: Week Code 8, World Code Sprint 13 (HackerRank) 🥉🥉
+- Certificate of Merit: Python Coding Competition, C Coding Competition, CodeWar (University Level) 🥇🥇🥇
+- Star Performer: Book Eventz (Campus Ambassador) 🎖
 
 For more updates and information, follow me on [LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/).
 
