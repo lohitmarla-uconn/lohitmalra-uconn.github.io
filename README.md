@@ -2,7 +2,7 @@
 
 Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's student at the University of Connecticut - Storrs campus.
 
-<img src="IMG_20230712_120951.jpg" alt="Profile Picture" width="100" height="auto">
+<img src="IMG_20230712_120951.jpg" alt="Profile Picture" width="200" height="auto">
 
 I am an experienced, result-oriented, and resourceful data engineer with a passion for problem-solving. I excel in adapting to and meeting challenges, even with tight release schedules. My experience includes contributing to dynamic team environments that prioritize business growth by providing exceptional value and service.
 
