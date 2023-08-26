@@ -10,7 +10,7 @@ Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's studen
 
 ## Education
 - **Master's Degree:** Masters in Data Science, University of connecticut. :us:
-- **Bachelor's Degree:** Bachelor of Technology in Computer Science, GITAM University, :in:
+- **Bachelor's Degree:** Bachelor of Technology in Computer Science, GITAM University, 🇮🇳
 
 ## Certifications
 - [Data Camp Data Engineer](https://www.datacamp.com/statement-of-accomplishment/track/bb3172962b5cb453ea28c858c382362c42ba2fae)
