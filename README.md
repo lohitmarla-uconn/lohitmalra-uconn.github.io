@@ -11,10 +11,10 @@ I am an experienced, result-oriented, and resourceful data engineer with a passi
 - **Bachelor's Degree:** Bachelor of Technology in Computer Science, GITAM University, :in:
 
 ## Certifications
-- ! [Data Camp Data Engineer] (https://www.datacamp.com/statement-of-accomplishment/track/bb3172962b5cb453ea28c858c382362c42ba2fae)
-- ! [AWS Certified Cloud Practitioner] (https://www.credly.com/badges/bab9ff88-1a94-4036-9790-c359da957c98?source=linked_in_profile)
-- ! [Google IT Automation with Python Specialization] (https://www.credly.com/org/coursera/badge/google-it-support-certificate-2023)
-- ! [Astronomer Certification for Apache Airflow] (https://www.credly.com/badges/7dd223dd-ac40-48ef-979e-2b8f941719d7?source=linked_in_profile)
+- [Data Camp Data Engineer](https://www.datacamp.com/statement-of-accomplishment/track/bb3172962b5cb453ea28c858c382362c42ba2fae)
+- [AWS Certified Cloud Practitioner](https://www.credly.com/badges/bab9ff88-1a94-4036-9790-c359da957c98?source=linked_in_profile)
+- [Google IT Automation with Python Specialization](https://www.credly.com/org/coursera/badge/google-it-support-certificate-2023)
+- [Astronomer Certification for Apache Airflow](https://www.credly.com/badges/7dd223dd-ac40-48ef-979e-2b8f941719d7?source=linked_in_profile)
 - Problem Solving (Intermediate) – HackerRank
 
 ## Technical Proficiencies
