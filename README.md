@@ -9,7 +9,7 @@ Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's studen
 </div>
 
 ## Education
-- **Master's Degree:** Masters in Data Science, University of connecticut. :us:
+- **Master's Degree:** Masters in Data Science, University of connecticut. 🇺🇸
 - **Bachelor's Degree:** Bachelor of Technology in Computer Science, GITAM University. 🇮🇳
 
 ## Certifications
@@ -57,7 +57,7 @@ Key Contributions:
 - Collaborated on a team project to develop an application for hostel room allotment.
 - Designed and implemented an application for allocating student rooms in a hostel with over 1.8k+ rooms.
 - Received an appreciation letter from NIT-Warangal management for contributions.
-  [View the appreciation letter](https://drive.google.com/file/d/1j_vKxuxp-iJYlkDnsdLnVcl52eJjKNLv/view?usp=sharing)
+  [Appreciation letter](https://drive.google.com/file/d/1j_vKxuxp-iJYlkDnsdLnVcl52eJjKNLv/view?usp=sharing)
 
 ## Achievements
 - Bronze Medal: Week Code 8, World Code Sprint 13 (HackerRank) 🥉🥉
