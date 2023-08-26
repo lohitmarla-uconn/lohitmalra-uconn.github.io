@@ -66,4 +66,4 @@ Key Contributions:
 
 For more updates and information, follow me on [LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/).
 
-![Uconn](https://i0.wp.com/ctmirror-images.s3.amazonaws.com/wp-content/uploads/2020/06/Uconn-sign-1-e1593099230687.jpg?resize=1999%2C1338&ssl=1)
+![Animated GIF](giphy.gif)
