@@ -7,13 +7,14 @@ Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's studen
 I am an experienced, result-oriented, and resourceful data engineer with a passion for problem-solving. I excel in adapting to and meeting challenges, even with tight release schedules. My experience includes contributing to dynamic team environments that prioritize business growth by providing exceptional value and service.
 
 ## Education
-- **Bachelor's Degree:** Bachelor of Technology in Computer Science, GITAM University
+- **Master's Degree:** Masters in Data Science, University of connecticut, :us:
+- **Bachelor's Degree:** Bachelor of Technology in Computer Science, GITAM University, :in:
 
 ## Certifications
-- Data Camp Data Engineer
-- AWS Certified Cloud Practitioner (CCP)
-- Google IT Automation with Python Specialization
-- Astronomer Certification for Apache Airflow
+- ! [Data Camp Data Engineer] (https://www.datacamp.com/statement-of-accomplishment/track/bb3172962b5cb453ea28c858c382362c42ba2fae)
+- ! [AWS Certified Cloud Practitioner] (https://www.credly.com/badges/bab9ff88-1a94-4036-9790-c359da957c98?source=linked_in_profile)
+- ! [Google IT Automation with Python Specialization] (https://www.credly.com/org/coursera/badge/google-it-support-certificate-2023)
+- ! [Astronomer Certification for Apache Airflow] (https://www.credly.com/badges/7dd223dd-ac40-48ef-979e-2b8f941719d7?source=linked_in_profile)
 - Problem Solving (Intermediate) – HackerRank
 
 ## Technical Proficiencies
