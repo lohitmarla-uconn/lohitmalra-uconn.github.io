@@ -62,5 +62,3 @@ Key Contributions:
 For more updates and information, follow me on [LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/).
 
 ![Siberian Husky](https://cdn.britannica.com/84/232784-050-1769B477/Siberian-Husky-dog.jpg)
-
-Feel free to use this formatted content in your GitHub README page. Remember to replace URLs and links with your actual information and images.
