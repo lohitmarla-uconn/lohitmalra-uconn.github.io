@@ -1,0 +1,375 @@
+---
+title: "STAT_5405_HW_5"
+output: html_document
+date: "2023-10-08"
+---
+
+### 1.a. 
+```{r}
+
+library(tidyverse)
+house_data <- read_csv("kc_house_data.csv")
+
+str(house_data)
+```
+
+Price and sqft_living labels were labeled by dividing 1000 to visualize. we can interpret the results by mulitplying the values with 1000.
+```{r}
+
+ggplot(house_data, aes(x=sqft_living/1000, y=price)) + geom_point(shape=15,col="darkred")
+
+```
+From the above scatter plot between the price and the square feet of living we can observe that there is **not much linear relation ship** despite one outlier where even though the living area is too large exceeding 10000 sqft stil the price is in between the 2000000 and 3000000. Most of the data points were densely scattered with the living areas less than the 5000 sqft and price is below 2000000 and the data points were scarcely densed with the prices beyond 2000000. 
+
+
+### 1.b. 
+
+Following scatter plot is the log transformed one with on the price variable to the sqft_living. There is a linear relation ship to little extent however we can **observe curve** in the plot as we move towards the x-axis.   
+```{r}
+
+ggplot(house_data, aes(x=sqft_living, y=log(price))) + geom_point(shape=15,col="darkred")
+
+```
+
+### 1.c.
+```{r}
+
+correlation_coefficient <- cor(log(house_data$price), house_data$sqft_living)
+print(correlation_coefficient)
+
+```
+It shows **positive direct relation** between the sqft_living and the price where the increase in sqft_living leads to increase in price wihch means that **every unit increase in the sqft_living there is a increase in 0.69 units of the price.**
+
+.d.i) 
+
+Following code is to fit the model of **log transformed price** which is a response variable to the explanatory variable sqft_living. 
+```{r}
+
+fittedlm_log <- lm(log(house_data$price) ~ house_data$sqft_living, data = house_data)
+summary(fittedlm_log)
+
+```
+From the above results, we can interpret that the intercept is 1.222e+01 which is the partial coefficients of sqft_living to intercept to 0 with the practical significance of less than 2e-16. Multiple R-Squared value is 0.4835 which means that the response variable price which is explained by the predictable vairable sqft_living. Adjusted R-squared tells us the 48% of the fit of the model which is not a good sign and the F-statistic: 2.023e+04 was to determine the practical significance. Less p-value indicates the **rejection of the null hypothesis** and determines that the intercept is not equal to 0.
+
+### 1.ii)
+
+Below code is to fit the model of **price** which is a response variable to the explanatory variable **sqft_living**. 
+```{r}
+
+fittedlm <- lm(house_data$price ~ house_data$sqft_living, data = house_data)
+summary(fittedlm)
+
+```
+From the above results, we can interpret that the intercept is 1.131e+03 which is the partial coefficients of sqft_living to intercept to 0 with the practical significance of less than 2e-16. **Multiple R-Squared value is 0.4929 which means that the response variable price which is explained by the predictable variable sqft_living**. Adjusted R-squared tells us the 49% of the fit of the model which is not a good sign and the F-statistic: 2.1e+04 was to determine the practical significance. Less p-value indicates the rejection of the null hypothesis and determines that the intercept is not equal to 0.
+
+### 1.e.
+
+First is to fit the model and then from the fitted model extracted the residuals upon which we plotted to view the residual on the 0 line for the variance and the normality assumption to be satisfied.
+
+Following code is to plot the **normal q-q plots to check the residual data for normality and the studentized_residuals plot for the vairance assumptions to verify graphically**.
+```{r}
+
+library(e1071)
+res <- residuals(fittedlm)
+
+car::qqPlot(res, main = NA, pch = 19, col = 2, cex = 0.7)
+
+skew <- skewness(res)
+cat("skewness of the residuals -> ", skew)
+
+
+boxplot(res, main = "Box Plot of Data", ylab = "Variable Name")
+
+#we need to calcualte the studentised residuals to get the intervals 
+sigma_residuals <- sigma(fittedlm)
+studentized_residuals <- res / sigma_residuals
+
+
+plot(fitted(fittedlm), studentized_residuals, xlab = "Fitted Values", ylab = "Studentized Residuals", 
+     main = "Studentized Residuals vs. Fitted Values")
+abline(h = 0, col = "red")
+```
+We cannot perform the shapiro wilk test on the data as the sample size is greater than 5000 which is the limit to perform the test. So for the larger data sets it is advisable to go with the pictorial representation and interpret the data.
+From the above normal q-q plot we can see that the data is **deviating** from the standard line which indicates that the data is not normalized. From the studentized residual vs fitted values plot we see that most of the data points lie in the range 3, -3 which infers the fitted model as a good it however outliers are exceeding the range. Also, from the below plotted normal q-q plot for the studentized_residuals shows the deviation from the line which does not satisfies the assumption of the normality and the variance. 
+
+
+```{r}
+car::qqPlot(studentized_residuals, main = NA, pch = 19, col = 2, cex = 0.7)
+```
+Below analysis is to perform on the log transformed data and extract residuals from it.
+```{r}
+#log trasnformed data
+library(e1071)
+res <- residuals(fittedlm_log)
+
+car::qqPlot(res, main = NA, pch = 19, col = 2, cex = 0.7)
+
+skew <- skewness(res)
+cat("skewness of the residuals -> ", skew)
+
+#we need to calcualte the studentised residuals to get the intervals 
+sigma_residuals <- sigma(fittedlm_log)
+studentized_residuals <- res / sigma_residuals
+
+plot(fitted(fittedlm_log), studentized_residuals, xlab = "Fitted Values", ylab = "Studentized Residuals", 
+     main = "Studentized Residuals vs. Fitted Values")
+abline(h = 0, col = "red")
+```
+From the above normal q-q plot we can see that the data is **deviating** from the standard line which indicates that the data is not normalized. From the **studentized residual vs fitted values plot we see that most of the data points lie in the range 2, -2 which infers the fitted model as a good** it however outliers are exceeding the range. Also, from the below plotted normal q-q plot for the studentized_residuals shows the deviation from the line which does not satisfies the assumption of the normality and the variance.
+
+```{r}
+car::qqPlot(studentized_residuals, main = NA, pch = 19, col = 2, cex = 0.7)
+```
+
+### 1.f.
+
+Following chart is to fit the model of log transformed to figure out the outliers of the model
+
+```{r}
+
+plot(log(house_data$price), predict(fittedlm_log,newdata = house_data), 
+     col=4, cex=0.3, xlab="Actual", ylab="Predicted", axes=FALSE)
+
+extpts <- which(abs(residuals(fittedlm_log)) > 3*sd(residuals(fittedlm_log)))
+text(house_data$price[extpts], 
+     predict(fittedlm_log, newdata = house_data)[extpts],
+     rownames(house_data$price)[extpts], cex=0.5, col=2)
+axis(1); axis(2); grid(); abline(0,1, col=4, lwd=3)
+
+```
+
+Above code is to extract the outliers from the data whose residuals are greater than the three times of the standard deviation of the model and eliminating from the data frame and fitting a model on top the new data set.
+
+```{r}
+house_data.2 <- house_data[-extpts,]
+mod.2 <- lm(log(price) ~ sqft_living, data = house_data.2)
+summary(mod.2)
+```
+From the above results, we can interpret that the intercept is 1.222e+01 which is the partial coefficients of sqft_living to intercept to 0 with the practical significance of less than 2e-16. Multiple R-Squared value is 0.4875 which means that the response variable price which is explained by the predictable vairable sqft_living. Adjusted R-squared tells us the 48.75% of the fit of the model which is not a good sign and the F-statistic: 2.051e+04 was to determine the practical significance. Less p-value indicates the **rejection of the null hypothesis** and determines that the intercept is not equal to 0.
+
+There is a 0.0040 increase in the multiple R-squared value and there is no much difference in the model.
+
+```{r}
+par(mfrow=c(2,2))
+plot(mod.2)
+```
+```{r}
+
+plot(log(house_data.2$price), predict(mod.2,newdata = house_data.2), 
+     col=4, cex=0.3, xlab="Actual", ylab="Predicted", axes=FALSE)
+axis(1); axis(2); grid(); abline(0,1, col=4, lwd=3)
+
+```
+From the above chart we can view there are no outliers and are eliminated.
+
+### 1.g.
+```{r}
+
+fittedlm_log <- lm(log(house_data$price) ~ house_data$sqft_living, data = house_data)
+
+summary(fittedlm_log)
+
+```
+From the above summary, the null hypothesis is less than 0 for the intercept and so we reject it as the p-value is less than 0.05 whereas it is the same case with the alternate hypothesis. We are using the t-test to evaluate the estimated  co-efficient to 0. Following are the confidence intervals of the 
+
+```{r}
+
+coef_names <- names(coef(fittedlm_log))
+confint(fittedlm_log)["(Intercept)", ]
+confint(fittedlm_log)["house_data$sqft_living", ]
+```
+
+### 1.h.
+
+```{r}
+
+new_data <- data.frame(sqft_living = c(1500))  
+
+# Predict the response variable based on the new data
+predicted_price <- exp(predict(mod.2, newdata = new_data,  interval = "confidence", level = 0.95))
+predicted_price
+
+
+```
+
+
+### 2. 
+
+Duncan is the dataset which posses the information about the various professions like, bc, wc and prof with their respective values like, income, educatoin and prestige. From the structure of the data Duncan, it is clear that the type variable is factor with three levels and the rest are the integers. 
+```{r}
+
+library("car")
+data("Duncan")
+str(Duncan)
+
+```
+
+### 2.a.
+```{r}
+
+education_color <- "mediumpurple4"
+income_color <- "darkgreen"
+
+par(bg = "black")
+ggplot(data = Duncan, aes(x = education, y = prestige, color = "Education")) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = education_color) +
+  labs(title = "Education vs. Prestige", x = "Education", y = "Prestige") +
+  scale_color_manual(values = c("Education" = education_color)) 
+
+# Create a regression plot for income vs. prestige with custom color
+ggplot(data = Duncan, aes(x = income, y = prestige, color = "Income")) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = income_color) +
+  labs(title = "Income vs. Prestige", x = "Income", y = "Prestige") +
+  scale_color_manual(values = c("Income" = income_color))
+```
+I have added two plots where one is between the income and the prestige and the other is between the education and prestige.
+For the plot between education and the prestige we can observe a liner relationship whereas the data point plotted are around the straight line even though certain data points are little far away from the stringht line assuming the data to be normal.
+
+For the plot between Income and the Prestige we can also a linear relation ship between them and also a outlier where the prestige is more even though the income is less. We can test the outliers and for the leverage points we can eliminate them if they are outliers as they can mislead the data where as not the leverage points cannot be removed as they show strong effect on the data.
+
+### 2.b.
+
+```{r}
+
+mod.type <- lm(Duncan$prestige ~ Duncan$type, data = Duncan)
+summary(mod.type)
+
+```
+From the above summary we can observer only for the results of bc and prof it is due to the less data of the wc level which is imbalanced in the data level. bc profession was negatively co-related with the prestige which means that the increasing in prestige level decreases the bc level and coming to prof type it is positively co-related which indicates that one unit increase in the prof 43.778 units increase in the prestige. From the above, we can conclude that the prof profession is enjoying the more prestige. 
+
+```{r}
+
+mod.type <- lm(Duncan$income ~ Duncan$type, data = Duncan)
+summary(mod.type)
+
+```
+From the above summary we can observer only for the results of bc and prof it is due to the less data of the wc level which is imbalanced in the data level. bc profession was negatively co-related with the income which means that the increasing by a unit of income level decreases the bc level by 26.905 and coming to prof type it is positively co-related which indicates that one unit increase in the prof, 9.389 units increase in the income From the above, we can conclude that the prof profession is enjoying the more income 
+
+
+### 2.c.
+
+```{r}
+
+library("MASS")
+hist(Duncan$prestige, breaks=30, main="", xlab="prestige")
+skewness(Duncan$prestige)
+
+
+```
+```{r}
+
+mod.1 <- lm(Duncan$prestige ~., data = Duncan)
+summary(mod.1)
+
+```
+```{r}
+par(mfrow=c(2,2))
+plot(mod.1)
+```
+
+From the above, summary of the model we can interpret that the intercept value where all the partial co-coefficients are 0 of the variables with corresponds to the response variable. Negative value of -0.18503 indicates negatively co-related and also wc factor value of type var also negatively co-related with value of -14.66113 where as remaining predictor variables such as income anf education were positively co-related with 0.59 and 0.34 values respectively. With the less p-value of 2.2e-16 which is less than significance level of 0.05 reject the null hypothesis and conclude that the predictor values are interact with the response variable. The high p-value associated with the intercept indicates that there is no strong evidence to show that the expected prestige at this baseline point is significantly different from zero. 
+
+Multiple R-squared which is an important parameter to take into consideration where it indicates the variability, and as the value is 0.9132 we can take as 91.31% which tell us the percent of variables contributing to the 
+model in other words 91.31% of the variance in the response variable (prestige) is explained by the predictor variables  that we had fit and the rest has no variability or unexplanined. Adjusted R-squared which build on the R-squared values indicates the good fit of the model. 
+
+Residual standard error is 9.744 which means that the actual values of the response variable differ from the predicted values produced by the regression model on the 40 degrees of freedom. The F-statistic tests the overall significance of the model. In this case, the F-statistic has a very low p-value (< 2.2e-16), indicating that the model as a whole is statistically significant.
+
+### 2.d.
+
+```{r}
+
+mod.1 <- lm(Duncan$prestige ~ education * income * type , data = Duncan)
+summary(mod.1)
+
+```
+From the above summary, we can observe that the education, income, typebc and typeprof have positive co-relation on the response variable where as interaction of the education and income is negatively co-related with the presitge variable which means that the every unit increase of value of education and income there is a decrease of -0.015434. Interaction of the education and typebc is negatively co-related with the presitge variable which means that the every unit increase of value of education and income there is a decrease of -1.975040. In the same way for the income:typebc  negatively co-related. 
+
+education, income, typebc is positively co-related with the prestige variable where one unit increase in those three there is a 0.054614 units increase in the prestige variable where as education:income:typeprof is negativel co-related by -0.005462.
+
+### 2.e. 
+```{r}
+library(e1071)
+res <- residuals(mod.1)
+
+car::qqPlot(res, main = NA, pch = 19, col = 2, cex = 0.7)
+
+skew <- skewness(res)
+cat("skewness of the residuals -> ", skew)
+
+
+boxplot(res, main = "Box Plot of Data", ylab = "Variable Name")
+
+#we need to calcualte the studentised residuals to get the intervals 
+sigma_residuals <- sigma(mod.1)
+studentized_residuals <- res / sigma_residuals
+
+
+plot(fitted(mod.1), studentized_residuals, xlab = "Fitted Values", ylab = "Studentized Residuals", 
+     main = "Studentized Residuals vs. Fitted Values")
+abline(h = 0, col = "red")
+```
+From the output we can the residuals follows normality except two data points minister machinist are outliers. As there are outliers in the data and we fitted the model on top of it the model could have been mislead due to the outliers. In this case, we need to decide wether to remove the outliers or not by reaching out to the domain teams. We also need to fit the model by removing the outliers and should interpret the result.s
+
+### 2.f.
+
+```{r}
+
+mod.edu_indcom <- lm(Duncan$prestige ~ Duncan$education + Duncan$income , data = Duncan)
+summary(mod.edu_indcom)
+
+```
+From the above result, p-value is less than 2.2e-16 which indicates the rejection of null hypothesis which implies that the coefficient for the predictor is not equal to zero and the variability of the model is 82% which is a good fit and the education as well as income is positively corelated and has practical significant.
+
+```{r}
+
+res <- residuals(mod.edu_indcom)
+
+car::qqPlot(res, main = NA, pch = 19, col = 2, cex = 0.7)
+
+skew <- skewness(res)
+cat("skewness of the residuals -> ", skew)
+
+shapiro.test(res)
+
+boxplot(res, main = "Box Plot of Data", ylab = "Variable Name")
+
+#we need to calcualte the studentised residuals to get the intervals 
+sigma_residuals <- sigma(mod.1)
+studentized_residuals <- res / sigma_residuals
+
+
+plot(fitted(mod.1), studentized_residuals, xlab = "Fitted Values", ylab = "Studentized Residuals", 
+     main = "Studentized Residuals vs. Fitted Values")
+abline(h = 0, col = "red")
+```
+From the above plots, normality of the residuals are achieved we can say the model is a good fit however, there is an outlier which could mislead the model.
+
+```{r}
+
+plot(jitter(mod.edu_indcom$fitted.values), rstudent(mod.edu_indcom), pch=19,
+     col=ifelse(Duncan$prestige == 0, 3, 4),cex=0.3, xlab="",
+     ylab="Studentized residuals", axes=F)
+abline(h=0,col="grey", lwd=2)
+axis(1);axis(2)
+```
+above chart illustrates model appears to be reasonable. However, the magnitude of the residuals may be higher than we would like - we expect 
+ of the Studentized residuals to be between 3 and -3, but we see that some residuals are outside this range.
+ 
+### 2.g.
+
+Following is the partial regression plot where it plots the values of predictors to the response whereas each predictor will be maped to the response variable by keeping the other **predictor vars constant**.
+
+```{r}
+avPlots(mod.edu_indcom)
+```
+Follwoing are the partial residual plots for education and income show the relationship between each of these variables and the residuals from the full linear regression model that includes **both education and income as predictors**.
+```{r}
+crPlots(mod.edu_indcom)
+```
+### 2.h.
+
+Basically, in the linear regression model effect size can be concluded as **R-squared values** which tells us the best fit of the model where higher the value the best fit the model is as it explains the variability which means that quantifies the proportion of **variability** in the response variable explained by the predictors.. It's value is in the range from 0 to 1. In the model of f, it's value is 0.8282 which means the 82%. However, R-squared values does not alone contributes to the effect size.
+
+
