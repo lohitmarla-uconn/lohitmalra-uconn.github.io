@@ -1,0 +1,782 @@
+---
+title: "Exploratory Analysis on Snail Dataset"
+author: "Lohit Marla"
+date: "2023-10-23"
+output: html_document
+---
+
+
+### Dataset: snails
+
+@BlochWillig2006 discussed snail (gastropod) abundance in the Luquillo Forest Dynamics Plot in the northwest of the Luquillo Experimental Forest (LEF) in the Luquillo Mountains of northeastern Puerto Rico. Although 17 species of gastropods are known to live in the Luquillo Forest Dynamics Plot, the dataset shows counts of the three most abundant species, *Caracolus caracolla*, *Gaeotis nigrolineata*, and *Nenia tridens*, at 40 different sites in the wet season in 1995. We denote these by ***Carcar***, ***Gaenig***, and ***Nentri*** in the dataset. Note that snail abundance is determined based on the minimum number known to be alive (MKNA) at each site during each season.
+
+The dataset also has several predictors that can affect snail abundance. ***Elevation*** and ***Slope*** are continuous variables, ranging from 333--428 m above sea level, and 0.7 to 65.1, respectively in total of 151 observations.
+
+***Aspect*** is a categorical variable that represents the compass directions and is aggregated into four levels.
+
+***Soiltype*** is a categorical variable with three levels, *Zarzal =1*, *Cristal =2* and *Prieto=3*.
+
+There are three canopy cover (***CC***) classes; CC level 1 (0--49% cover) experienced the most intensive logging and agriculture prior to 1934; CC level 2 (50--80% cover) was used for shade-coffee cultivation and other small scale mixed agriculture before 1934; and CC level 3 (80--100% cover) was lightly and selectively logged up to the 1950s. With Canopy openness (CO), higher numbers represent greater canopy openness.
+
+Litter cover (***LC***) measures the mean leaf litter cover at a point calculated as levels 1-5.
+
+Plant apparency quantifies the aerial density of all living vegetation at heights up to 3 m above the forest floor. Apparency is estimated separately for *Prestoea acuminata*, the sierra palm by ***PAsp*** and for all other plant species by ***PAothers***
+
+[In this analysis, we are trying to figure out the effect of the predictors to the Gaeotis nigrolineata species]{style="color:green;"} 
+
+Following code snippet displays the structure of the data
+```{r}
+
+library(tidyverse)
+data1 <- read.csv("snails.csv", header = TRUE)
+str(data1)
+
+```
+
+According to our data response variable consists of the counts of positive real line to which we are going with the generalised linear model which were popularly refered as GLIM. 
+
+# Normality Assumptions
+
+In the context of Generalized Linear Models (GLMs), normality assumptions regarding the distribution of the response variable are typically not necessary or relevant. Traditional linear regression models (such as ordinary least squares regression) assume that the residuals (i.e., the differences between the observed values and the predicted values) are normally distributed. However, GLMs are designed to handle a wide range of data types and distributions, and they do not rely on the normality of the response variable. However, normality is verified to understand the data.
+
+Following code is to verify the normality assumptions on the data set 
+```{r}
+
+library(e1071)
+hist(data1$Gaenig, breaks=30, main="", xlab="fcover", col= "darkslateblue")
+shapiro.test(data1$Gaenig)
+skewness(data1$Gaenig)
+
+```
+From the above boxplot we can observe the data is not satisfying the normality assumptions also the data is positively skewed.
+
+Data is not following the normality assumption even after applying the sqrt transformations 
+```{r}
+
+library(e1071)
+hist(sqrt(data1$Gaenig), breaks=20, main="", xlab="fcover", col= "darkorchid3")
+shapiro.test(sqrt(data1$Gaenig))
+skewness(sqrt(data1$Gaenig))
+
+```
+We cannot perform the box-cox transformation as there are 0 counts in the Gaenig column.
+
+# Data Preprocessing
+
+We combine Aspect levels (1 and 2) and (5 and 6), and save the categorical variables as factor variables.
+```{r}
+data1$Aspect[data1$Aspect==6]=5
+data1$Aspect[data1$Aspect==2]=1
+```
+
+Following code is to make the following columns Aspect, soil, CC and LC which are categorical variables to factor datatype from the integer variable to make the data on the basis of levels.
+```{r}
+
+cat.id <- which(colnames(data1) %in% c("Aspect","Soil","CC","LC"))
+data1[,cat.id] <- lapply(data1[,cat.id],as.factor)
+
+```
+
+Following are the uniques values in the dataset of each variable
+```{r}
+unique(data1$Aspect) 
+unique(data1$Soil) 
+unique(data1$CC) 
+unique(data1$LC) 
+```
+To create indicator (or dummy) variables corresponding to the levels of a factor
+```{r}
+
+Asp1 <- ifelse(data1$Aspect == 1, 1, 0)
+Asp5 <- ifelse(data1$Aspect == 5, 1, 0)
+Asp7 <- ifelse(data1$Aspect == 7, 1, 0)
+Asp8 <- ifelse(data1$Aspect == 8, 1, 0)
+
+```
+
+Setting the seed value to 123457, seed can be any random value. Data Was splitted into the 80% and 20% proportion of the train and test data set. 
+```{r}
+
+set.seed(123457)
+train.prop <- 0.80
+trnset <- sort(sample(1:nrow(data1), ceiling(nrow(data1)*train.prop)))
+# create the training and test sets
+train.set <- data1[trnset, ]
+test.set  <- data1[-trnset, ]
+
+```
+
+# Model Fitting
+
+We are trying to fit the Poisson loglinear model on the data
+
+The Poisson log linear model is a popular example of a GLIM for explaining counts $Y_i$, using a log link function:
+
+$$
+Y_i | \lambda_i \sim \mbox{Poisson}(\lambda_i), 
+$$ {#eq-poissonglim1}
+
+where
+
+$$
+\log(\lambda_i) = \beta_0 + \sum_{j=1}^p \beta_j X_{i,j}. 
+$$
+
+We are discarding from the predictor variables as they are unique values and not variation in them to verify the relationship.
+
+```{r}
+unique(data1$year)
+unique(data1$season)
+```
+
+
+Following code is the implementation of the Poisson loglinear model
+```{r}
+
+gaenig.pf <- glm(Gaenig ~ Elevation+Slope+Aspect+Soil+CC+LC+CO+PA.sp+PA.other, 
+                 family='poisson', data=train.set)
+summary(gaenig.pf)
+
+```
+
+*i)* *Interpret results*
+
+The estimated coefficient for **Elevation** is $0.002851$ with a SE of $0.008574$. This means that the increase in expected log count of log $\lambda_i$ for one unit increase in **Elevation** is $0.002851$. Exponentiating this value gives $1.002855$, so that the multiplicative effect on expected count $\lambda_i$ due to a unit increase in Elevation is $1.002855$. 
+
+Code to figure out the exp values of all the intercepts
+```{r}
+
+predictors_to_exp <- c("Gaenig", "Elevation", "Slope", "Aspect2", "Aspect5", "Aspect6", "Aspect7", "Aspect8", "Soil4", "Soil6", "CC2", "CC3", "LC2", "LC3", "LC4", "LC5", "PA.sp", "PA.other")
+
+# Extract the coefficient estimates for the specified predictors
+coef_estimates <- coef(gaenig.pf)
+
+# Calculate the exponentials for the specified predictors
+exp_predictors <- exp(coef_estimates[predictors_to_exp])
+
+# Print the results
+print(exp_predictors)
+
+```
+For ***Slope***, these values are $-0.007304$ and $\exp(-0.007304)=$ $0.9923533$ respectively. In the similar way it follows for all the intercepts.
+
+We can observe that the Soil.4 and PA.other showing significant impact on the gaenig species.
+
+The **null deviance** tells us how well the response variable can be predicted by a model with only an intercept term, i.e., $\eta_i = \beta_0$, and the fitted mean response is $\hat{\lambda}_i = \overline{Y}$ (the sample mean). The null deviance for the Poisson model is defined by
+
+$$
+\mbox{Dev}_{\mbox{null}}= 2\sum_{i=1}^n Y_i \log(Y_i/\overline{Y}).
+$$ {#eq-Nulldeviance}
+
+The **residual deviance** tells us how well the response variable can be predicted by a model with the intercept and $p$ predictor variables. The residual deviance for the Poisson model is defined by
+
+$$
+\mbox{Dev}_{\mbox{resid}} = 2\sum_{i=1}^n Y_i \log(Y_i/\hat{\lambda}_i) 
+= 2\sum_{i=1}^n Y_i \log(Y_i/ \exp(\hat{\eta}_i)).
+$$ {#eq-Residdeviance}
+
+The output shows:
+
+Null deviance: 205.68  on 120  degrees of freedom
+Residual deviance: 177.93  on 105  degrees of freedom
+
+*ii)* **Dispersion Parameter**
+
+Here, we figure out the dispersion parameter to verify wether the data is over dispersed. Dispersion parameter should be 1 to be normally dispersed if it exceeds the limit then we determine the data is overly dispersed 
+
+```{r}
+(disp.est <- gaenig.pf$deviance/gaenig.pf$df.residual)
+```
+For the above full model the dispersion parameter is greater than 1 which it implies the data is overly dispersed.
+
+*iii)* **Tests for model adequacy**
+
+Is the fitted full model adequate?
+
+Compare the deviance from the fitted full model with the deviance from the saturated model. 
+
+The notion of a **saturated model** is unique to GLIM. In the saturated model, the predicted values are identical to the observed responses.
+
+Use the code below to do the test:
+
+```{r}
+with(gaenig.pf, cbind(deviance = deviance, df = df.residual,
+     p = pchisq(deviance, df.residual, lower.tail=FALSE)))
+```
+
+The chi-squared statistic tests $H_0$: data prefers the full model versus $H_1$: data does not prefer the full model.
+
+The observed chi-squared test statistic is $174.654$ with $n-p =104$ d.f. and the $p$-value is very small. We reject $H_0$, and conclude that the fitted model is inadequate.
+
+[The inadequacy of the fitted model could be due to ]{style="color:red;"}
+
+(i) omitted predictors, 
+(ii) violation of the log-linearity assumption, or 
+(iii) the issue of over-dispersion.
+
+We explore the model fitting further.
+
+Following is the code to fit the poisson log linear model on the data with no predictor which is null model and then compare the deviance with the full model
+```{r}
+
+gaenig.pn <- glm(Gaenig~1, 
+                 family='poisson', data=train.set)
+summary(gaenig.pn)
+
+```
+The null model output shows the coefficient for the intercept with its SE, $z$-statistic and $p$-value. The null and residual deviances have the same value 
+with the 120 d.f. (matching the null deviance value from the fitted full model).
+
+**Compare the full model with the null model.**
+
+We do this to see whether all the predictors taken together are useful for explaining log counts over and above the intercept alone. 
+The null model (with only the intercept) is nested within the full fitted model with all the predictors.
+
+From the output,
+Null deviance: 205.68  on 120  degrees of freedom
+Residual deviance: 205.68  on 120  degrees of freedom
+
+Compute 
+$$
+\mbox{Extra deviance = null deviance - fitted model residual deviance}
+$$
+and
+$$
+\mbox{Extra d.f. = d.f.(null deviance) - d.f.(fitted model residual deviance)}
+$$
+
+The extra deviance (or deviance difference, or drop in deviance) test statistic defined below has a chi-squared distribution with d.f. given by the extra d.f.:
+```{r}
+
+with(gaenig.pf, cbind(deviance = null.deviance-deviance, 
+                      df = df.null-df.residual,
+                      p = pchisq(null.deviance-deviance, 
+                      df.null-df.residual, 
+                      lower.tail=FALSE)))
+
+```
+
+The output shows:
+extra deviance = 31.02666
+extra d.f. = 16
+$p$-value (from the chi-squared test) = 0.01335116
+
+The $p$-value shows that the data rejects $H_0$ (null model) and chooses the full fitted model (model under $H_1$).
+
+We can obtain the same $p$-value using code below:
+```{r}
+(an <- anova(gaenig.pn, gaenig.pf, test="Chisq"))
+```
+The small $p$-value shows that the data rejects $H_0$ (null model) and prefers the full fitted model (model under $H_1$).
+
+*iv)* **Information Criteria**
+
+In the context of generalized linear models (GLMs), information criteria are used to assess the quality of a model and to help in the process of model selection. The two commonly used information criteria for model selection in GLMs are the **Akaike Information Criterion** (AIC) and the **Bayesian Information Criterion** (BIC). These criteria are used to balance model fit and model complexity.
+
+
+**Akaike Information Criterion**: We can also compare the Akaike Information Criterion (AIC) from the fitted full model and the null model.
+
+AIC is an information criterion used for model selection. For a model with $p$ estimated parameters, it is defined as
+
+$$
+\text{AIC} = -2 \ell(\hat{\boldsymbol{\beta}};\mathbf{y}) + 2p
+$$ {#eq-AIC}
+
+where $\ell(\hat{\boldsymbol{\beta}};\mathbf{y})$ denotes the maximized log-likelihood function (see @sec-poisloglik). While we wish to select a model with largest maximized log-likelihood, AIC penalizes us for using a model with an unnecessarily large $p$. 
+
+```{r}
+AIC(gaenig.pf, gaenig.pn)
+```
+
+The better model is the one which gives the smaller AIC, here the null model with AIC = 377.7470
+
+**Note**: Another useful information based model selection criterion is called the Bayesian Information Criterion (BIC), which uses a different penalty:
+
+$$
+\text{BIC} = -2 \ell(\hat{\boldsymbol{\beta}};\mathbf{y}) + p \log(n)
+$$ {#eq-BIC}
+
+Again, a model with smaller BIC is better.
+
+```{r}
+BIC(gaenig.pn, gaenig.pf)
+```
+The better model is the one which gives the smaller BIC, here the null model with BIC = 380.5428
+
+**Mean Absolute Deviation (MAD):**
+
+MAD is a measure of the average absolute errors between the predicted values and the actual (observed) values. It is calculated by taking the absolute difference between each predicted value and its corresponding actual value, summing these absolute differences, and then dividing by the number of data points.
+
+MAD is a measure of the average magnitude of errors in the predictions.
+
+*v)* In-Sample MAD on the training data
+
+We are fitting on the null model
+```{r}
+
+actual_values <- train.set$Gaenig  
+predicted_values <- fitted(gaenig.pn)  
+
+# Calculate MAD on the training data
+mad_training <- mean(abs(actual_values - predicted_values))
+
+# Print the MAD
+print(mad_training)
+
+```
+In summary, a MAD value of 1.080117 suggests that, on average, our model's predictions on the training data have an absolute error of approximately 1.080117 units. Lower MAD values indicate better model accuracy and a closer fit to the training data, but it's essential to evaluate the model's performance on a test dataset to assess its generalization capabilities.
+
+*vi)* **Out-Sample MAD on the test data**
+
+```{r}
+
+actual_values_test <- test.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values_test <- predict(gaenig.pn, newdata = test.set, type = "response")
+
+# Calculate MAD on the test data
+mad_test <- mean(abs(actual_values_test - predicted_values_test))
+
+# Print the MAD on the test data
+print(mad_test)
+
+```
+In summary, a MAD value of 0.9126722 on the test data suggests that, on average, our model's predictions on new, unseen data have an absolute error of approximately 0.9126722 units. A lower MAD value is generally indicative of a more accurate model when applied to new data.
+
+We are fitting on the full model to observe the results
+```{r}
+
+actual_values <- train.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values <- fitted(gaenig.pf)  # Replace "gaenig.pf" with your model object
+
+# Calculate MAD on the training data
+mad_training <- mean(abs(actual_values - predicted_values))
+
+# Print the MAD
+print(mad_training)
+
+```
+In summary, a MAD value of 0.9860363 suggests that, on average, our model's predictions on the training data have an absolute error of approximately 0.9860363 units. Lower MAD values indicate better model accuracy and a closer fit to the training data, but it's essential to evaluate the model's performance on a test dataset to assess its generalization capabilities.
+
+Out-Sample MAD on the training data
+
+```{r}
+
+actual_values_test <- test.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values_test <- predict(gaenig.pf, newdata = test.set, type = "response")
+
+# Calculate MAD on the test data
+mad_test <- mean(abs(actual_values_test - predicted_values_test))
+
+# Print the MAD on the test data
+print(mad_test)
+
+```
+In summary, a MAD value of 1.037381 on the test data suggests that, on average, our model's predictions on new, unseen data have an absolute error of approximately 1.037381 units. A lower MAD value is generally indicative of a more accurate model when applied to new data.
+
+In comparison, even though full model's MAD value is less on the train data set when compared to the null model the fitted values of test dataset does not looks good as the null model MAD value is 0.9126722 which is less than the full model.
+
+**Ways to check for overdispersion**
+
+1.  We can compare the sample variances to the sample averages for groups of responses with identical predictor values.
+2.  We can examine the deviance goodness of fit test after fitting a rich model with several predictors to the data.
+3.  We can examine the deviance residuals to see if outliers may lead to a large deviance statistic.
+
+**Models for overdispersed data**
+
+(a) the quasi-Poisson loglinear or
+(b) the negative-binomial loglinear
+
+
+We fit the **quasi-Poisson** model to the overdispersed Gaenig counts in the snails data using the glm() function with the family=quasipoisson option. Parameter estimates are obtained by maximizing the quasi-likelihood function.
+```{r}
+
+gaenig.qpf <- glm(Gaenig ~ Elevation+Slope+Aspect+Soil+CC+CO+LC+PA.sp+PA.other,
+ family=quasipoisson,data=train.set)
+summary(gaenig.qpf)
+
+```
+*i)* **Interpret results**
+
+The estimated coefficient for **Elevation** is $0.002851$ with a SE of $0.011080$. This means that the increase in expected log count of log $\lambda_i$ for one unit increase in **Elevation** is $0.002851$. Exponentiating this value gives $1.002855$, so that the multiplicative effect on expected count $\lambda_i$ due to a unit increase in Elevation is $1.002855$. 
+
+Code to figure out the exp values of all the intercepts
+```{r}
+
+predictors_to_exp <- c("Gaenig", "Elevation", "Slope", "Aspect2", "Aspect5", "Aspect6", "Aspect7", "Aspect8", "Soil4", "Soil6", "CC2", "CC3", "LC2", "LC3", "LC4", "LC5", "PA.sp", "PA.other")
+
+# Extract the coefficient estimates for the specified predictors
+coef_estimates <- coef(gaenig.qpf)
+
+# Calculate the exponentials for the specified predictors
+exp_predictors <- exp(coef_estimates[predictors_to_exp])
+
+# Print the results
+print(exp_predictors)
+
+```
+For ***Slope***, these values are $-0.007304$ and $\exp(-0.007304)=$ $0.9927224$ respectively. In the similar way it follows for all the intercepts.
+We can observe that the Soil.4 and PA.other showing significant impact on the gaenig species.
+
+Null deviance: 205.68  on 120  degrees of freedom
+Residual deviance: 177.93  on 105  degrees of freedom
+  
+*ii)* **Dispersion Parameter**
+
+Here, we figure out the dispersion parameter to verify wether the data is over dispersed. Dispersion parameter should be 1 to be normally dispersed if it exceeds the limit then we determine the data is overly dispersed 
+
+```{r}
+(disp.est <- gaenig.qpf$deviance/gaenig.qpf$df.residual)
+```
+The dispersion parameter is estimated to be $1.679366$. This value is equal to the value we estimated above as the residual deviance divided by the d.f. from the full Poisson model.
+
+*iii)* **Tests for model adequacy**
+```{r}
+
+with(gaenig.qpf, cbind(deviance = deviance, df = df.residual,
+     p = pchisq(deviance, df.residual, lower.tail=FALSE)))
+
+```
+The chi-squared statistic tests $H_0$: data prefers the full model versus $H_1$: data does not prefer the full model.
+
+The observed chi-squared test statistic is $174.654$ with $n-p =104$ d.f. and the $p$-value is very small. We reject $H_0$, and conclude that the fitted model is inadequate.
+
+```{r}
+
+gaenig.qpn <- glm(Gaenig~1,
+                  family=quasipoisson,data=train.set)
+summary(gaenig.qpn)
+
+```
+`The null model output shows the coefficient for the intercept with its SE, $z$-statistic and $p$-value. The null and residual deviances have the same value 
+with the 120 d.f. (matching the null deviance value from the fitted full model).
+
+```{r}
+(an.qp<- anova(gaenig.qpn, gaenig.qpf, test="Chisq"))
+```
+According to the $p$-value shows that the data accepts $H_0$ (null model) and prefers the null fitted model than the full fitted model.
+
+*iv)* **Information Criteria**
+
+We cannot perform AIC and bIC on the Quasi-Poisson Loglinear Model and we can perform Likelihood-Ratio Test (LRT):
+
+**The Likelihood-Ratio Test** (LRT) is a statistical test that helps you compare two nested models to determine if adding additional parameters significantly improves the model fit. In the context of generalized linear models (GLMs), you can use the LRT to compare a simpler model (null model) to a more complex model that includes additional predictors. Here's how to perform the LRT in R:
+
+```{r}
+
+# Calculate deviances for both models
+deviance_null <- gaenig.qpn$deviance
+deviance_complex <- gaenig.qpf$deviance
+
+# Calculate the likelihood ratio statistic
+lrt_statistic <- deviance_null - deviance_complex
+
+# Perform the LRT
+lrt_p_value <- pchisq(lrt_statistic, 1, lower.tail = FALSE)
+
+lrt_p_value
+```
+
+The $p$-value shows that the data rejects $H_0$ (null model) and accepts the full fitted model(model under $H_1$).
+
+
+*v)* **In-Sample MAD on the training data**
+
+We are fitting on the null model
+```{r}
+
+actual_values <- train.set$Gaenig 
+predicted_values <- predict(gaenig.qpn, newdata = train.set, type = "response")
+
+# Calculate MAD on the training data
+mad_training <- mean(abs(actual_values - predicted_values))
+
+# Print the MAD
+print(mad_training)
+
+```
+In summary, a MAD value of 1.080117 suggests that, on average, our model's predictions on the training data have an absolute error of approximately 1.080117 units. Lower MAD values indicate better model accuracy and a closer fit to the training data, but it's essential to evaluate the model's performance on a test dataset to assess its generalization capabilities.
+
+*vi)* **Out-Sample MAD on the test data**
+
+```{r}
+
+actual_values_test <- test.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values_test <- predict(gaenig.qpn, newdata = test.set, type = "response")
+
+# Calculate MAD on the test data
+mad_test <- mean(abs(actual_values_test - predicted_values_test))
+
+# Print the MAD on the test data
+print(mad_test)
+
+```
+In summary, a MAD value of 0.9126722 on the test data suggests that, on average, our model's predictions on new, unseen data have an absolute error of approximately 0.9126722 units. A lower MAD value is generally indicative of a more accurate model when applied to new data.
+
+We are fitting on the full model to observe the results
+```{r}
+
+actual_values <- train.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values <- fitted(gaenig.qpf)  # Replace "gaenig.pf" with your model object
+
+# Calculate MAD on the training data
+mad_training <- mean(abs(actual_values - predicted_values))
+
+# Print the MAD
+print(mad_training)
+
+```
+In summary, a MAD value of 0.9860363 suggests that, on average, our model's predictions on the training data have an absolute error of approximately 0.9860363 units. Lower MAD values indicate better model accuracy and a closer fit to the training data, but it's essential to evaluate the model's performance on a test dataset to assess its generalization capabilities.
+
+Out-Sample MAD on the training data
+
+```{r}
+
+actual_values_test <- test.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values_test <- predict(gaenig.qpf, newdata = test.set, type = "response")
+
+# Calculate MAD on the test data
+mad_test <- mean(abs(actual_values_test - predicted_values_test))
+
+# Print the MAD on the test data
+print(mad_test)
+
+```
+In summary, a MAD value of 1.037381 on the test data suggests that, on average, our model's predictions on new, unseen data have an absolute error of approximately 1.037381 units. A lower MAD value is generally indicative of a more accurate model when applied to new data.
+
+In comparison, even though the MAD values of the null model is more on the train data when compared to the full model as expected the null model's MAD value on the test data is less with respect to the full model.
+
+**Negative Binomial Regression**
+
+The full negative binomial regression model includes all the predictors:
+```{r}
+library(MASS)
+gaenig.nbf <- glm.nb(Gaenig~Elevation+Slope+Aspect+Soil+CC+CO+LC+PA.sp+PA.other, 
+                     data=train.set)
+summary(gaenig.nbf)
+
+```
+
+*i)* **Interpret results**
+
+The estimated coefficient for **Elevation** is $0.004123$ with a SE of $0.010317$. This means that the increase in expected log count of log $\lambda_i$ for one unit increase in **Elevation** is $0.004123$. Exponentiating this value gives $1.004132$, so that the multiplicative effect on expected count $\lambda_i$ due to a unit increase in Elevation is $1.004132$. 
+
+Code to figure out the exp values of all the intercepts
+```{r}
+
+predictors_to_exp <- c("Gaenig", "Elevation", "Slope", "Aspect2", "Aspect5", "Aspect6", "Aspect7", "Aspect8", "Soil4", "Soil6", "CC2", "CC3", "LC2", "LC3", "LC4", "LC5", "PA.sp", "PA.other")
+
+# Extract the coefficient estimates for the specified predictors
+coef_estimates <- coef(gaenig.nbf)
+
+# Calculate the exponentials for the specified predictors
+exp_predictors <- exp(coef_estimates[predictors_to_exp])
+
+# Print the results
+print(exp_predictors)
+
+```
+For ***Slope***, these values are $-0.006415$ and $\exp(-0.006415)=$ $0.9926538$ respectively. In the similar way it follows for all the intercepts.
+
+We can observe that the Soil.4 and PA.other showing significant impact on the gaenig species.
+
+The output shows:
+Null deviance: 150.18  on 120  degrees of freedom
+Residual deviance: 129.66  on 103  degrees of freedom
+
+*ii)* **Dispersion Parameter**
+
+```{r}
+(disp.est <- gaenig.nbf$deviance/gaenig.nbf$df.residual)
+```
+The dispersion parameter is estimated to be $1.716632$ as per the above two models. However, this values is little less when compare to the above ones but still the data is overdispersed as it is not equal to 1.
+
+*iii)* **Tests for model adequacy**
+```{r}
+
+with(gaenig.nbf, cbind(deviance = deviance, df = df.residual,
+     p = pchisq(deviance, df.residual, lower.tail=FALSE)))
+
+```
+The chi-squared statistic tests $H_0$: data prefers the full model versus $H_1$: data does not prefer the full model.
+
+The observed chi-squared test statistic is $132.0283$ with $n-p =104$ d.f. and the $p$-value is small. We reject $H_0$, and conclude that the fitted model is inadequate. However, the $p$-value is little close to significant level.
+
+
+The null negative binomial regression model only includes the intercept:
+```{r}
+
+gaenig.nbn <- glm.nb(Gaenig~1, data = train.set)
+summary(gaenig.nbn)
+
+```
+The null model output shows the coefficient for the intercept with its SE, $z$-statistic and $p$-value. The null and residual deviances have the same value with the 120 d.f. (matching the null deviance value from the fitted full model).
+
+
+```{r}
+(an.nb <- anova(gaenig.nbn, gaenig.nbf, test="Chisq"))
+```
+The predictors are not useful for explaining the counts as the small $p$-value is above the significant level.
+
+
+*iv)* **Information Criteria**
+
+AIC is an information criterion used for model selection. For a model with $p$ estimated parameters, it is defined as
+
+```{r}
+AIC(gaenig.nbn, gaenig.nbf)
+```
+
+The better model is the one which gives the smaller AIC, here the null model with AIC = 361.6281
+
+Again, a model with smaller BIC is better.
+
+```{r}
+BIC(gaenig.nbn, gaenig.nbf)
+```
+The better model is the one which gives the smaller BIC, here the null model with BIC = 367.2197
+
+
+*v)* In-Sample MAD on the training data
+
+We are fitting on the null model
+```{r}
+
+actual_values <- train.set$Gaenig 
+predicted_values <- predict(gaenig.nbn, newdata = train.set, type = "response")
+
+# Calculate MAD on the training data
+mad_training <- mean(abs(actual_values - predicted_values))
+
+# Print the MAD
+print(mad_training)
+
+```
+In summary, a MAD value of 1.080117 suggests that, on average, our model's predictions on the training data have an absolute error of approximately 1.080117 units. Lower MAD values indicate better model accuracy and a closer fit to the training data, but it's essential to evaluate the model's performance on a test dataset to assess its generalization capabilities.
+
+*vi)* **Out-Sample MAD on the test data**
+
+```{r}
+
+actual_values_test <- test.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values_test <- predict(gaenig.nbn, newdata = test.set, type = "response")
+
+# Calculate MAD on the test data
+mad_test <- mean(abs(actual_values_test - predicted_values_test))
+
+# Print the MAD on the test data
+print(mad_test)
+
+```
+In summary, a MAD value of 0.9126722 on the test data suggests that, on average, our model's predictions on new, unseen data have an absolute error of approximately 0.9126722 units. A lower MAD value is generally indicative of a more accurate model when applied to new data.
+
+We are fitting on the full model to observe the results
+```{r}
+
+actual_values <- train.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values <- predict(gaenig.nbf, newdata = train.set, type = "response")  # Replace "gaenig.pf" with your model object
+
+# Calculate MAD on the training data
+mad_training <- mean(abs(actual_values - predicted_values))
+
+# Print the MAD
+print(mad_training)
+
+```
+In summary, a MAD value of 0.9921456 suggests that, on average, our model's predictions on the training data have an absolute error of approximately 0.9921456 units. Lower MAD values indicate better model accuracy and a closer fit to the training data, but it's essential to evaluate the model's performance on a test dataset to assess its generalization capabilities.
+
+Out-Sample MAD on the training data
+
+```{r}
+
+actual_values_test <- test.set$Gaenig  # Replace "Gaenig" with the actual response variable name
+predicted_values_test <- predict(gaenig.nbf, newdata = test.set, type = "response")
+
+# Calculate MAD on the test data
+mad_test <- mean(abs(actual_values_test - predicted_values_test))
+
+# Print the MAD on the test data
+print(mad_test)
+
+```
+In summary, a MAD value of 1.019177 on the test data suggests that, on average, our model's predictions on new, unseen data have an absolute error of approximately 1.019177 units. A lower MAD value is generally indicative of a more accurate model when applied to new data.
+
+In comparison, even though full model's MAD value is less on the train data set when compared to the null model the fitted values of test dataset does not looks good as the null model MAD value is 0.9126722 which is less than the full model.
+
+Even though we figured out the predictors such as soil and pa which are influencing the response variable by the interpretation of the fitted model. We can apply certain procedures to find out them such as stepwise selection. 
+
+**Stepwise Selection**
+
+Stepwise selection in MLR models seeks to reduce the computing complexity of best subsets regression by sequentially selecting variables based on partial $F$-test statistics and associated $p$-values in order to decide whether or not to include each of the $p$ predictors in the model.
+
+```{r}
+mod.step <- step(gaenig.nbf, direction = "both", trace = 0) # no detailed printing
+summary(mod.step)
+```
+From the above result we can confirm that the soil.4 and pa.other are having the p-values less than the significance level which tells us that they are influencing the gaenig.
+
+Following normal quantile plots for the residuals to further diagnosis the model performance.
+```{r}
+# Load necessary libraries if not already loaded
+library(car)
+
+# Model 1
+res1 <- residuals(gaenig.pn)
+par(mfrow=c(1,3)) # Set up a 1x3 grid for plots
+par(mar=c(5, 4, 2, 2)) # Set the margins for each plot
+
+# Residuals Plot for Model 1
+qqPlot(res1, main = "Poisson loglinear model", pch = 19, col = 2, cex = 0.7)
+skew1 <- skewness(res1)
+cat("skewness of the residuals (Model 1) -> ", skew1, "\n")
+shapiro.test(res1)
+
+# Model 2
+res2 <- residuals(gaenig.qpn)
+
+# Residuals Plot for Model 2
+qqPlot(res2, main = "Quasi-Poisson", pch = 19, col = 2, cex = 0.7)
+skew2 <- skewness(res2)
+cat("skewness of the residuals (Model 2) -> ", skew2, "\n")
+shapiro.test(res2)
+
+# Model 3
+res3 <- residuals(gaenig.nbn)
+
+# Residuals Plot for Model 3
+qqPlot(res3, main = "Negative Binomial Regression", pch = 19, col = 2, cex = 0.7)
+skew3 <- skewness(res3)
+cat("skewness of the residuals (Model 3) -> ", skew3, "\n")
+shapiro.test(res3)
+
+# Reset the plotting layout
+par(mfrow=c(1,1))
+```
+
+
+```{r}
+data <- data.frame(
+  
+ Model_Name = c( "Poisson loglinear model", "_________", "Quasi-Poisson", "_________", "Negative Binomial Regression"),
+ I = c('|',"_________", '|',"_________", '|'),
+ DISPERSION = c(1.679366,"_________", 1.679366,"_________", 1.269503),
+ I = c('|', "_________",'|',"_________", '|'),
+ Full_AIC = c(378.7204,"_________", "N/A", "_________",374.2662),
+ I = c('|',"_________", '|',"_________", '|'),
+ NULL_AIC = c(377.7470, "_________","N/A","_________", 361.6281 ),
+ I = c('|',"_________", '|',"_________", '|'),
+ Full_BIC = c(426.2488, "_________","N/A","_________", 424.5904), 
+ I = c('|',"_________", '|',"_________", '|'),
+ Null_BIC = c(380.5428,"_________", "N/A", "_________",367.2197), 
+ I = c('|', "_________",'|', "_________",'|'),
+ IN_MAD = c(1.080117, "_________",1.080117, "_________",1.080117 ), 
+ I = c('|',"_________", '|', "_________",'|'),
+ OUT_MAD = c(0.9126722, "_________",0.9126722, "_________",0.9126722)
+)
+
+ library(knitr)
+
+kable(data, format = "markdown")
+
+```
+From the above table it is clear that the **negative binomial regression best fits the model** in terms of dispersion of the information criteria and best predicts the snails species Gaening counts. Out of all the predictors, it is **Soil.4 and PA.other shows negative co-relation.**
+
