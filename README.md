@@ -14,17 +14,17 @@ lohit.marla@uconn.edu
 linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
 
 ### Academic Projects
-   #### Analyzing Insurance Claims for Future Financial Safeguard
+    Analyzing Insurance Claims for Future Financial Safeguard
       - Utilized classification and regression trees, random forest, xgboost algorithms, and statistical models (logit and probit).
       - Optimized feature extraction for enhanced predictive capabilities such as variable selection method and Variable importance parameter.
       - Explored the effectiveness of Support Vector Machines (SVM) for both classification and regression tasks.
 
-   #### InsNova Auto Insurance Company Modeling Problem - Competition
+    InsNova Auto Insurance Company Modeling Problem - Competition
       - Spearheaded analysis of insurance claims data, implementing a Tweedie distribution to predict claims and estimate claim costs.
       - Achieved a benchmark performance of 0.19, surpassing competition standards demonstrating exceptional problem-solving skills and proficiency in insurance analytics.
 
 ### Professional Experience
-  #### Data Engineer
+   Data Engineer
     Novus Platform
     Vizag, India
     Sep 2019 - July 2023
@@ -41,7 +41,7 @@ linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
       - Utilized Splunk for log analytics on unstructured data, establishing an effective alert system for timely issue resolution.
       - Learned Tableau and worked on creating dashboards for environment comparisons and health monitoring.
 
-  #### Python Developer Intern
+   Python Developer Intern
     National Institute of Technology Warangal, India
     Apr 2019 - Jun 2019
       - Collaborated in a team-focused environment to develop an application for Hostel Room allotment.
