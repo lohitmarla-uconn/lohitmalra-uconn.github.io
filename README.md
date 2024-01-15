@@ -8,7 +8,7 @@ Welcome to my GitHub portfolio! I am Lohit Marla, a data science master's studen
 </p>
 </div>
 
-Lohit Marla
+Lohit Marla,
 Willimantic, Connecticut
 lohit.marla@uconn.edu
 linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
@@ -27,20 +27,18 @@ linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
     Novus Platform
     Vizag, India
     Sep 2019 - July 2023
-      - Engineered and implemented Incremental Data Ingestion Pipelines for Xifin and Lims, merging daily transactional data into the data platform and enabling seamless querying 
-via AWS Athena.
+      - Engineered and implemented Incremental Data Ingestion Pipelines for Xifin and Lims, merging daily transactional data into the data platform and enabling seamless querying via AWS Athena.
       - Designed a Build of Materials pipeline to efficiently track product costs, enhancing visibility into the production process.
       - Developed PySpark-based data comparison pipelines, automating data validation from source to target and storing results in cloud storage through Airflow.
       - Engineered data extraction and transformation pipelines for Google Campaign Manager, aligning with business logic and optimizing data processing efficiency.
       - Executed ETL pipeline migration from Qubole to AWS, ensuring a smooth transition and leveraging AWS Boto in Python for seamless integration.
-      - Developed and implemented new functionalities in existing data pipelines, aligning with business.
+      - Developed and implemented new functionalities in existing data pipelines, aligning with business requirements.
       - Proactively addressed on-demand issues, identifying and resolving bugs in data pipelines through thorough code analysis.
       - Worked on the Unified Monitoring project, implementing a central alerting mechanism for all service failures in AWS using AWS Lambda, SQS, SNS, and Dynamodb.
-      - Built data processing pipeline using AWS Lambda, SQS, SNS, Dynamodb, contributing to the Unified Monitoring project.
+      - Built a data processing pipeline using AWS Lambda, SQS, SNS, Dynamodb, contributing to the Unified Monitoring project.
       - Played a crucial role in performance enhancements of Spark jobs, optimizing their execution efficiency.
       - Utilized Splunk for log analytics on unstructured data, establishing an effective alert system for timely issue resolution.
       - Learned Tableau and worked on creating dashboards for environment comparisons and health monitoring.
-
 
   ### Python Developer Intern
     National Institute of Technology Warangal, India
