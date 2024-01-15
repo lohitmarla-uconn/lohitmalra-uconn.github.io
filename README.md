@@ -13,17 +13,18 @@ Willimantic, Connecticut
 lohit.marla@uconn.edu
 linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
 
-## Academic Projects
-   ### Analyzing Insurance Claims for Future Financial Safeguard
+### Academic Projects
+   ##### Analyzing Insurance Claims for Future Financial Safeguard
       - Utilized classification and regression trees, random forest, xgboost algorithms, and statistical models (logit and probit).
       - Optimized feature extraction for enhanced predictive capabilities such as variable selection method and Variable importance parameter.
       - Explored the effectiveness of Support Vector Machines (SVM) for both classification and regression tasks.
 
-   ### InsNova Auto Insurance Company Modeling Problem - Competition
+   ##### InsNova Auto Insurance Company Modeling Problem - Competition
       - Spearheaded analysis of insurance claims data, implementing a Tweedie distribution to predict claims and estimate claim costs.
       - Achieved a benchmark performance of 0.19, surpassing competition standards demonstrating exceptional problem-solving skills and proficiency in insurance analytics.
 
-  ### Data Engineer
+### Professional Experience
+    Data Engineer
     Novus Platform
     Vizag, India
     Sep 2019 - July 2023
@@ -46,7 +47,7 @@ linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
       - Collaborated in a team-focused environment to develop an application for Hostel Room allotment.
       - Engineered a Python module facilitating student room allocation.
 
-## Education
+### Education
   - Master’s in Data Science (In Progress)
     University of Connecticut
     GPA: 4.0
@@ -54,7 +55,7 @@ linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
     GITAM University
     GPA: 8.82
 
-## Skills
+### Skills
   - Python
   - SQL
   - Pyspark
@@ -64,7 +65,7 @@ linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
   - AWS
   - Machine Learning
 
-## Certifications
+### Certifications
   - Databricks Certified Associate Developer for Apache Spark 3.0
   - [Data Camp Data Engineer](https://www.datacamp.com/statement-of-accomplishment/track/bb3172962b5cb453ea28c858c382362c42ba2fae)
   - [AWS Certified Cloud Practitioner](https://www.credly.com/badges/bab9ff88-1a94-4036-9790-c359da957c98?source=linked_in_profile) 
@@ -73,7 +74,7 @@ linkedin:[LinkedIn](https://www.linkedin.com/in/lohit-marla-85a305150/)
   - SQL Badge – LeetCode
   - Problem Solving (Intermediate) - HackerRank
 
-## Achievements
+### Achievements
 - Bronze Medal: Week Code 8, World Code Sprint 13 (HackerRank) 🥉🥉
 - Certificate of Merit: Python Coding Competition, C Coding Competition, CodeWar (University Level) 🥇🥇🥇
 - Star Performer: Book Eventz (Campus Ambassador) 🎖
