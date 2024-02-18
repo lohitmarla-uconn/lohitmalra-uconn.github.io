@@ -1,0 +1,73 @@
+---
+title: "Data Cleaning in R"
+author: "Lohit Marla"
+format: 
+  html:
+    embed-resources: true
+---
+
+  
+```{r}
+library(stringr)
+library(readxl)
+library(tiff)
+library(raster)
+library(tidyverse)
+library(jpeg)
+library(janitor)
+
+state <- read_excel("State_to_State_Migrations_Table_2019.xls")
+state <- state[ 5:length(state), 1:length(colnames(state))] 
+state <- state |> janitor::clean_names() |>  row_to_names(1)  |> clean_names()
+state <- state |> dplyr::select(!c(current_residence_in_2 , current_residence_in_3, current_residence_in_4, current_residence_in_5, current_residence_in_6, current_residence_in_7 , current_residence_in_8, current_residence_in_9, current_residence_in_10, current_residence_in_11, current_residence_in_12, population_1_year_and_over, same_house_1_year_ago, same_state_of_residence_1_year_ago, na, na_2, na_3, different_state_of_residence_1_year_ago, na_4)) |>row_to_names(1) 
+
+
+state <- state[complete.cases(state), ]
+
+colnames(state)[1] <- "State_arrived"
+state <- state[ 2:length(state), 1:length(colnames(state))]  |> clean_names()
+
+num_cols <- ncol(state)
+
+# Create new columns dynamically
+for (i in seq(2, num_cols, by = 2)) {
+  new_col_name <- paste0("tmp-" ,colnames(state)[i])
+  col1 <- colnames(state)[i]
+  col2 <- colnames(state)[i + 1]
+  state <- state %>%
+    mutate(!!new_col_name := paste(!!rlang::sym(col1), !!rlang::sym(col2), sep = "-"))
+}
+
+selected_columns <- state |> select( starts_with("tmp") | starts_with("state_arrived") )
+
+
+state_tmp <- selected_columns |> pivot_longer(cols = (!starts_with("na") & !starts_with("state_arrived") ), 
+                                              names_to = "state_departed", 
+                                              values_to = "movement_estimate")
+
+state_final <- state_tmp |>
+  filter(str_detect(movement_estimate, "-")) |>
+  separate(state_departed, into = c("prefix", "state_departed"), sep = "-") |>
+  mutate(state_departed = str_to_title(state_departed) ) |> 
+  separate(movement_estimate, into = c("movement_estimate", "movement_moe"), sep = "-") |>
+  filter( !(state_departed == "Total") & !(state_arrived == "NA") & !(state_departed == "U_s_island_area") & !(state_departed == "Foreign_country")) |> 
+  dplyr::select("state_arrived", "state_departed", "movement_estimate",  "movement_moe")
+
+state_unique <- unique(state_final) 
+
+state_replace <- state_unique |> mutate( 
+  movement_estimate = parse_number(movement_estimate),
+  movement_moe = parse_number(movement_moe),
+  state_departed = gsub("_", " ", state_departed),
+  State_arrived = gsub("_", " ", state_arrived)
+)
+
+state_final <- state_replace |> mutate( state_departed = str_to_title(state_departed) )
+
+state_final <- state_final |> mutate( state_departed = gsub("District Of Columbia" , "District of Columbia",state_departed), 
+                                      State_arrived = gsub("District Of Columbia", "District of Columbia", State_arrived)) |>
+  dplyr::select("State_arrived", "state_departed", "movement_estimate",  "movement_moe")
+
+write.csv(state_final, "output_file.csv", row.names = FALSE)
+
+```
