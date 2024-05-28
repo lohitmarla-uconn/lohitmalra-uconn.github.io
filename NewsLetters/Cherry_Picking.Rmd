@@ -1,0 +1,40 @@
+---
+title: "Cherry Picking: Ethical Implications"
+author: "Lohit Marla"
+output: pdf_document
+---
+
+# Cherry Picking: An Ethical Dilemma
+
+Cherry Picking is an unethical research practice where a researcher intentionally withholds unfavorable results and selectively presents only those that align with their hypothesis. This practice can have severe consequences on public perception, organizational trust, and the integrity of research publications.
+
+## Unethical Aspects of Cherry Picking
+
+1. **Misrepresentation of Reality:**
+   - Cherry picking distorts the true picture of the data, creating a biased and inaccurate representation.
+
+2. **Confirmation Bias:**
+   - Reinforces confirmation bias by selectively presenting information that confirms preexisting beliefs.
+
+3. **Deceptive or Manipulative:**
+   - Deceiving readers, decision-makers, or the public into making incorrect judgments or decisions.
+
+4. **Loss of Trust:**
+   - Erodes trust in research, analysis, or reporting, leading to a loss of confidence in the credibility of the source.
+
+5. **Publication Bias:**
+   - Contributes to publication bias in scientific research, distorting the scientific literature and leading to incomplete knowledge.
+
+6. **Policy Implications:**
+   - Can have serious consequences in policymaking, leading to poorly informed policies that do not address real issues.
+
+7. **Ethical Violation:**
+   - Violates ethical principles such as honesty, transparency, and integrity in research and analysis.
+
+## Example Illustration
+
+Consider a reputed organization in the healthcare industry that recently marketed a new product for blood tissue cancer detection. The company claimed an 80% accuracy rate with no side effects. However, independent researchers found the accuracy to be only 60%, and they uncovered side effects that the company had not disclosed.
+
+This discrepancy was exposed in news journals, online blogs, and newspapers, resulting in a significant impact on the organization's reputation. Sales for their remaining products declined, and customers who had purchased the new product were in a state of panic.
+
+The example illustrates how cherry-picking, in this case, hiding side-effects and selectively presenting supportive data, can have far-reaching consequences on both the organization and its stakeholders.
